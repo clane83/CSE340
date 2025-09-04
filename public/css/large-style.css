@@ -1,0 +1,44 @@
+@media screen and (min-width: 600px) {
+    #menu {
+        display: none;
+        /* Hide the hamburger menu on larger screens */
+    }
+
+    .navigation {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        /* 5 columns for 5 items */
+        position: static;
+        width: auto;
+        height: 50px;
+        margin-right: 15px;
+        margin-left: 15px;
+        padding: 0;
+        align-items: center;
+        background: var(--navigation-background-color);
+        /* optional for contrast */
+    }
+
+    .navigation li {
+        color: var(--background-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        list-style: none;
+    }
+
+    .navigation a {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding: 0;
+        align-content: center;
+        text-decoration: none;
+        color: var(--font-color);
+        line-height: 50px;
+    }
+
+
+}
