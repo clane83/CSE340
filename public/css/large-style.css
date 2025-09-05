@@ -1,4 +1,4 @@
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 700px) {
     #menu {
         display: none;
         /* Hide the hamburger menu on larger screens */
@@ -38,6 +38,58 @@
         text-decoration: none;
         color: var(--font-color);
         line-height: 50px;
+    }
+
+    .welcome-container {
+        position: relative;
+        margin-bottom: 2rem;
+        height: 400px;
+
+    }
+
+    .welcome-container img {
+        width: 100%;
+        height: auto;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+    }
+
+    .welcome-container #welcome-text {
+        position: absolute;
+        top: 75px;
+        left: 20px;
+        /* Move box to left side of image */
+        width: 60%;
+        /* Adjust width as needed */
+        z-index: 2;
+        background-color: color-mix(in srgb, var(--background-color), transparent 75%);
+        color: var(--primary-accent-color);
+        display: flex;
+        flex-direction: column;
+        /* Stack h2 above p */
+        align-items: flex-start;
+        /* Align text to left */
+        justify-content: flex-start;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .welcome-container #welcome-text h2 {
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    .welcome-container #welcome-text p {
+        width: 100%;
+        margin: 0;
+    }
+
+    .upgrades {
+        margin-top: 2rem;
     }
 
 

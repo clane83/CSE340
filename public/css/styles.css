@@ -32,6 +32,10 @@ body {
 
 }
 
+h1 {
+  text-align: center;
+}
+
 #menu {
   font-size: 1.5rem;
   border: 0;
@@ -144,12 +148,16 @@ body {
 }
 
 img {
-  max-width: 75%;
+  max-width: 100%;
   height: auto;
   display: block;
 
 }
 
-/* body {
-  overflow-x: hidden;
-} */
+
+.welcome-container section {
+  background-color: color-mix(in srgb, var(--background-color), transparent 75%);
+  color: var(--primary-accent-color);
+
+}
+
