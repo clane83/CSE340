@@ -26,8 +26,8 @@ body {
   /* padding: 5px; */
   margin-top: 15px;
   margin-bottom: 15px;
-  padding-left: 10%;
-  padding-right: 10%;
+  padding-left: 5%;
+  padding-right: 5%;
   overflow-x: hidden;
 
 }
@@ -161,3 +161,31 @@ img {
 
 }
 
+.upgrades {
+  text-align: center;
+  align-content: center;
+  align-items: center;
+  align-self: center;
+
+}
+
+.upgrades figure {
+  display: inline-block;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  width: 200px;
+  height: auto;
+  align-content: center;
+
+}
+
+.upgrades img {
+  display: block;
+  margin: 0 auto;
+}
+
+.reviews {
+  text-align: center;
+
+}
