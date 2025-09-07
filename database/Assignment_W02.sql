@@ -269,7 +269,13 @@ SET inv_description = REPLACE(inv_description, 'small interiors', 'large interio
 WHERE inv_make = 'GM' and inv_model = 'Hummer';
 
 --5
-
+SELECT i.*
+FROM public.inventory i
+INNER JOIN public.classification c
+	ON i.classification_id = c.classification_id
+WHERE c.classification_name = 'Sport'
 
 --6
-
+UPDATE public.inventory
+SET inv_image = REPLACE(inv_image, '/images/','/images/vehicles/'),
+inv_thumbnail = REPLACE(inv_thumbnail, '/images/','/images/vehicles/')
