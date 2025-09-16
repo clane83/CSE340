@@ -127,13 +127,13 @@
         /* Make figures direct grid items */
     }
 
-    .upgrades figure {
-        background: var(--background-color);
+    /* .upgrades figure {
+        background: var();
         padding: 1rem;
         border-radius: 0.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         display: flex;
         flex-direction: column;
         align-items: center;
-    }
+    } */
 }

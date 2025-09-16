@@ -21,10 +21,10 @@
 body {
   background-color: var(--background-color);
   border: #4A90E2 2px solid;
-  margin-top: 15px;
-  margin-bottom: 15px;
-  padding-left: 5%;
-  padding-right: 5%;
+  margin: 50px;
+  /* margin-bottom: 15px; */
+  /* padding-left: 2%;
+  padding-right: 5%; */
   overflow-x: hidden;
   /* Prevent horizontal scroll */
 }
@@ -128,11 +128,7 @@ h1 {
   color: var(--primary-text-color);
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
+
 
 /* Welcome container base styles */
 .welcome-container {
@@ -148,10 +144,10 @@ img {
 .welcome-container img {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   height: 100%;
-  max-width: 100%;
+  max-width: 75%;
   max-height: 100%;
   object-fit: cover;
   /* This is key for responsive resizing */
@@ -196,18 +192,27 @@ img {
   border-radius: 8px;
   width: 200px;
   height: auto;
-  background: var(--background-color);
+  background: var(--primary-accent-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.upgrades img {
-  display: block;
-  margin: 0 auto;
+.upgrades figure img {
+  margin: 0;
 }
 
+/* .upgrades img {
+  display: block;
+  margin: 0 auto;
+} */
+
 .reviews {
+  text-align: center;
+  padding-right: 10px;
+}
+
+footer {
   text-align: center;
 }
