@@ -10,9 +10,8 @@ let pool
 if (process.env.NODE_ENV == "development") {
     pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        ssl: {
-            rejectUnauthorized: false,
-        },
+        // Render’s hosted Postgres requires TLS
+        ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
     })
 
     // Added for troubleshooting queries
