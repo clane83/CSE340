@@ -10,12 +10,9 @@ let pool
 if (process.env.NODE_ENV == "development") {
     pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        // Render’s hosted Postgres requires TLS
-        ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+        ssl: { rejectUnauthorized: false }, // keep SSL on dev if you need it locally
     })
 
-    // Added for troubleshooting queries
-    // during development
     module.exports = {
         async query(text, params) {
             try {
@@ -27,10 +24,20 @@ if (process.env.NODE_ENV == "development") {
                 throw error
             }
         },
+        pool, // <-- export pool too (consistent shape)
     }
 } else {
+    // PRODUCTION (Render) — needs SSL
     pool = new Pool({
         connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false },    // <-- REQUIRED on Render
     })
-    module.exports = pool
+
+    // keep the same export shape as dev so db.query(...) works the same
+    module.exports = {
+        async query(text, params) {
+            return pool.query(text, params)
+        },
+        pool,
+    }
 }
