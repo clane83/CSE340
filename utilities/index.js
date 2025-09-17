@@ -58,5 +58,4 @@ Util.buildClassificationGrid = async function (data) {
 }
 
 
-
 module.exports = Util;
