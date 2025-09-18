@@ -101,6 +101,8 @@ h1 {
   font-weight: bold;
 }
 
+/*********************** Home **********************/
+
 #top-header {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -216,6 +218,48 @@ h1 {
   padding-right: px;
 }
 
+
+/************************* inventory ***********************/
+#inv-display {
+  list-style: none;
+  width: 250px;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  padding: 0;
+  align-self: center;
+  justify-self: center;
+  float: none;
+}
+
+.namePrice {
+  text-align: center;
+
+}
+
+#inv-display li a img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+#inv-display li {
+  padding: 5px;
+  width: 250px;
+  margin: 5px;
+  border: var(--primary-text-color) solid 2px;
+  border-radius: 5px;
+  background-color: var(--primary-accent-color);
+}
+
+
+
+
+
+
+/************************** footer ***********************/
 footer {
   text-align: center;
 }
