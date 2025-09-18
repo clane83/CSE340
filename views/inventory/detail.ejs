@@ -1,19 +1,26 @@
 <h1>
-    <%= title %>
+    <%=item.inv_year %>
+        <%= title %>
 </h1>
 
 
 <article class="vehicle-detail">
     <img src="<%= item.inv_image %>" alt="Image of <%= item.inv_make %> <%= item.inv_model %>">
+    <h2>
+        <%= title %> Details
+    </h2>
     <ul class="specs">
-        <li>Price: $<%= new Intl.NumberFormat('en-US').format(item.inv_price) %>
+        <li><strong>Price: </strong>$<%= new Intl.NumberFormat('en-US').format(item.inv_price) %>
         </li>
-        <li>Year: <%= item.inv_year %>
+        <li><strong>Year:</strong>
+            <%= item.inv_year %>
         </li>
-        <li>Category: <%= item.classification_name %>
+        <li><strong>Category:</strong>
+            <%= item.classification_name %>
         </li>
     </ul>
     <p class="desc">
+        <strong>Description: </strong>
         <%= item.inv_description %>
     </p>
 </article>

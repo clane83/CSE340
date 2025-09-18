@@ -36,20 +36,16 @@ Util.buildVehicleDetailGrid = async function (data) {
             + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
             + ' on CSE Motors" /></a>'
         grid += '<div class="vehicle-detail">'
-        grid += '<hr />'
         grid += '<h2>' + vehicle.inv_make + ' ' + vehicle.inv_model + 'Detail'
         grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
             + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
             + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
         grid += '</h2>'
-        grid += '<span>Price: $'
-            + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
-        grid += '<span>Description: ' + inv_description
-        grid += '<span>'
-        grid += '<span>Color: ' + inv_color
-        grid += '</span>'
-        grid += '<span>Miles: ' + inv_miles
-        grid += '</span>'
+        grid += '<span><strong>Price:</strong> $' +
+            new Intl.NumberFormat("en-US").format(vehicle.inv_price) + '</span>';
+        grid += '<span><strong>Description:</strong> ' + inv_description + '</span>';
+        grid += '<span><strong>Color:</strong> ' + inv_color + '</span>';
+        grid += '<span><strong>Miles:</strong> ' + inv_miles + '</span>';
         grid += '</div>'
 
     } else {

@@ -24,7 +24,7 @@ invCont.buildVehicle = async function (req, res, next) {
         title: `${item.inv_make} ${item.inv_model}`,
         nav,
         item,
-        layout: './layouts/layout'
+        layout: './layouts/vehicle'
     });
 };
 
