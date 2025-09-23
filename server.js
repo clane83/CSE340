@@ -11,6 +11,7 @@ require("dotenv").config();
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require('./routes/inventoryRoute');
 const vehicleRoute = require('./routes/vehicleRoute');
+const accountRoute = require('./routes/accountRoute')
 const session = require("express-session");
 const pool = require('./database/');
 const flash = require("connect-flash")
@@ -56,7 +57,7 @@ app.get("/", baseController.buildHome)
 // Inventory routes
 app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
-app.use("/account", require("./routes/accountRoute"));
+app.use("/account", accountRoute);
 
 
 /* ***********************
