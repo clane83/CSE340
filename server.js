@@ -14,7 +14,8 @@ const vehicleRoute = require('./routes/vehicleRoute');
 const accountRoute = require('./routes/accountRoute')
 const session = require("express-session");
 const pool = require('./database/');
-const flash = require("connect-flash")
+const flash = require("connect-flash");
+const bodyParser = require("body-parser");
 const app = express();
 
 
@@ -37,7 +38,8 @@ app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
-
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 
 /* ***********************
