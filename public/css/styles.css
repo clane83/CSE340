@@ -334,7 +334,14 @@ h1 {
   border-color: var(--primary-accent-color);
 }
 
+input:required:invalid,
+input:focus:invalid {
+  border: 2px solid red;
+}
 
+input:required:valid {
+  border: 1px solid var(--primary-accent-color);
+}
 
 /************************** footer ***********************/
 footer {
