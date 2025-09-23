@@ -1,0 +1,37 @@
+<!-- views/account/login.ejs -->
+<% /* Flash messages via express-messages (res.locals.messages) */ %>
+    <% if (typeof messages==='function' ) { %>
+        <div class="flash-container"><%- messages() %></div>
+        <% } %>
+
+            <% /* Fallback: if controller sends req.flash('notice', '...' ) */ %>
+                <% if (typeof notice !=='undefined' && notice && notice.length) { %>
+                    <div class="flash notice">
+                        <%= notice[0] %>
+                    </div>
+                    <% } %>
+
+                        <h1>
+                            <%= title %>
+                        </h1>
+
+                        <form class="auth-form" action="/account/login" method="post" novalidate>
+                            <div class="field">
+                                <label for="account_email">Email address</label>
+                                <input type="email" id="account_email" name="account_email" autocomplete="email"
+                                    placeholder="you@example.com" />
+                            </div>
+
+                            <div class="field">
+                                <label for="account_password">Password</label>
+                                <input type="password" id="account_password" name="account_password"
+                                    autocomplete="current-password" placeholder="Your password" />
+                            </div>
+
+                            <button class="btn" type="submit">Sign in</button>
+                        </form>
+
+                        <p class="muted">
+                            Don’t have an account?
+                            <a href="/account/register">Create one</a>.
+                        </p>

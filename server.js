@@ -10,8 +10,33 @@ const expressLayouts = require("express-ejs-layouts");
 require("dotenv").config();
 const baseController = require("./controllers/baseController");
 const inventoryRoute = require('./routes/inventoryRoute');
-const vehicleRoute = require('./routes/vehicleRoute')
+const vehicleRoute = require('./routes/vehicleRoute');
+const session = require("express-session");
+const pool = require('./database/');
+const flash = require("connect-flash")
 const app = express();
+
+
+
+/* ***********************
+ * Middleware
+ * ************************/
+app.use(session({
+  store: new (require('connect-pg-simple')(session))({
+    createTableIfMissing: true,
+    pool,
+  }),
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+  name: 'sessionId',
+}))
+app.use(flash())
+app.use((req, res, next) => {
+  res.locals.messages = require('express-messages')(req, res)
+  next()
+})
+
 
 
 /* ***********************
@@ -31,6 +56,8 @@ app.get("/", baseController.buildHome)
 // Inventory routes
 app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
+app.use("/account", require("./routes/accountRoute"));
+
 
 /* ***********************
  * Local Server Information
