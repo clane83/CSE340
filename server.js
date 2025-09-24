@@ -61,7 +61,6 @@ app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
 app.use("/account", accountRoute);
 
-
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file

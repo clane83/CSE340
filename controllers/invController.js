@@ -20,5 +20,55 @@ invCont.buildByClassificationId = async function (req, res, next) {
     })
 }
 
+// management hub
+invCont.buildManagement = async (req, res) => {
+    const nav = await utilities.getNav();
+    res.render("inventory/management", { title: "Management", nav });
+};
 
-module.exports = invCont
+// GET add-classification form
+invCont.buildAddClassification = async (req, res) => {
+    const nav = await utilities.getNav();
+    res.render("inventory/add_classification", { title: "Add Classification", nav, errors: [] });
+};
+
+// POST add-classification
+invCont.registerClassification = async (req, res, next) => {
+    try {
+        const nav = await utilities.getNav();
+        const { classification_name } = req.body;
+
+        const result = await invModel.addClassification(classification_name);
+
+        // If your DB returns rows on success:
+        if (result && result.rows) {
+            req.flash("notice", "Classification added.");
+            return res.redirect("/inv/");
+        }
+
+        // Fallback if model returned a string error
+        req.flash("notice", "Could not add classification.");
+        return res.status(500).render("inventory/add_classification", {
+            title: "Add Classification",
+            nav,
+            errors: [],
+            classification_name,
+        });
+    } catch (err) {
+        // Handle PG unique violation gracefully
+        if (err.code === "23505") {
+            req.flash("notice", "Classification already exists.");
+            const nav = await utilities.getNav();
+            return res.status(400).render("inventory/add_classification", {
+                title: "Add Classification",
+                nav,
+                errors: [],
+                classification_name: req.body.classification_name || "",
+            });
+        }
+        return next(err);
+    }
+};
+
+
+module.exports = invCont;

@@ -66,9 +66,9 @@ validate.checkRegData = async (req, res, next) => {
             title: "Registration",
             nav,
             errors: errors.array(),
-            account_firstname,
-            account_lastname,
-            account_email,
+            account_firstname: req.body.account_firstname,
+            account_lastname: req.body.account_lastname,
+            account_email: req.body.account_email,
         })
     }
     next()
@@ -102,5 +102,7 @@ validate.checkLoginData = async (req, res, next) => {
     }
     next()
 }
+
+
 
 module.exports = validate
