@@ -343,7 +343,7 @@ input:required:valid {
   border: 1px solid var(--primary-accent-color);
 }
 
-.notice-reg {
+.notice-acct {
   color: red;
 }
 

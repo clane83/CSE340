@@ -19,14 +19,11 @@ router.post(
 )
 
 
-// // Back-compat aliases so old "register" paths still work
-// router.get("/register", (req, res) => res.redirect(302, "/account/registration"));
-
-// router.post(
-//     "/register",
-//     regValidate.registationRules(),
-//     regValidate.checkRegData,
-//     utilities.handleErrors(accountController.registerAccount)
-// );
+router.post(
+    "/login",
+    regValidate.loginRules(),
+    regValidate.checkLoginData,
+    accountController.loginAccount
+)
 
 module.exports = router;

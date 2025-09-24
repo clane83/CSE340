@@ -60,16 +60,45 @@ validate.checkRegData = async (req, res, next) => {
     let errors = []
     errors = validationResult(req)
     if (!errors.isEmpty()) {
+        errors.array().forEach(e => req.flash("notice", e.msg))
         let nav = await utilities.getNav()
-        res.render("account/registration", {
-            errors,
+        return res.status(400).render("account/registration", {
             title: "Registration",
             nav,
+            errors: errors.array(),
             account_firstname,
             account_lastname,
             account_email,
         })
-        return
+    }
+    next()
+}
+
+
+validate.loginRules = () => [
+    body("account_email")
+        .trim()
+        .notEmpty().withMessage("Email is required.")
+        .bail()
+        .isEmail().withMessage("Enter a valid email."),
+    body("account_password")
+        .trim()
+        .notEmpty().withMessage("Password is required."),
+]
+
+// Handle login validation result
+validate.checkLoginData = async (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        // flash each error so <%- messages() %> shows them
+        errors.array().forEach(e => req.flash("notice", e.msg))
+        const nav = await utilities.getNav()
+        return res.status(400).render("account/login", {
+            title: "Login",
+            nav,
+            errors: errors.array(),              // optional if you also list them manually
+            account_email: req.body.account_email, // sticky value
+        })
     }
     next()
 }
