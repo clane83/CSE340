@@ -72,7 +72,7 @@ invCont.registerClassification = async (req, res, next) => {
 
 
 // GET add-inventory form
-invCont.buildAddInventory = async (req, res) => {
+invCont.buildAddInventory = async (req, res, next) => {
     try {
         const nav = await utilities.getNav();
         const { rows: classifications } = await invModel.getClassifications(); // returns rows
@@ -81,9 +81,8 @@ invCont.buildAddInventory = async (req, res) => {
             nav,
             errors: [],
             classifications,
-            // sticky:
-            classification_id: req.body?.classification_id || "",
-            // ...other stickies if you have them
+            classification_id: "",
+
         });
     } catch (err) {
         next(err);
@@ -95,34 +94,69 @@ invCont.buildAddInventory = async (req, res) => {
 invCont.registerInventory = async (req, res, next) => {
     try {
         const nav = await utilities.getNav();
-        const { classification_name } = req.body;
+        const {
+            inv_make,
+            inv_model,
+            inv_year,
+            inv_description,
+            inv_price,
+            inv_miles,
+            inv_color,
+            classification_id,
+        } = req.body;
+        console.log("req.body:", req.body);
+        console.log("inv_model:", inv_model);
 
-        const result = await invModel.addClassification(classification_name);
+        const result = await invModel.addInventory(
+            inv_make,                 // $1  inv_make
+            inv_model,                // $2  inv_model  
+            Number(inv_year),         // $3  inv_year
+            inv_description,          // $4  inv_description
+            Number(inv_price),        // $5  inv_price
+            Number(inv_miles),        // $6  inv_miles   
+            inv_color,                // $7  inv_color
+            Number(classification_id) // $8
+            );
 
-        // If your DB returns rows on success:
         if (result && result.rows) {
             req.flash("notice", "Inventory added.");
             return res.redirect("/inv/");
         }
 
-        // Fallback if model returned a string error
-        req.flash("notice", "Could not add classification.");
+        req.flash("notice", "Could not add inventory.");
+        const { rows: classifications } = await invModel.getClassifications();
         return res.status(500).render("inventory/add_inventory", {
             title: "Add Inventory",
             nav,
             errors: [],
-            classification_name,
+            classifications,
+            inv_make: req.body.inv_make || "",
+            inv_model: req.body.inv_model || "",
+            inv_year: req.body.inv_year || "",
+            inv_description: req.body.inv_description || "",
+            inv_price: req.body.inv_price || "",
+            inv_miles: req.body.inv_miles || "",
+            inv_color: req.body.inv_color || "",
+            classification_id: req.body.classification_id || "",
         });
     } catch (err) {
-        // Handle PG unique violation gracefully
         if (err.code === "23505") {
-            req.flash("notice", "Classification already exists.");
+            req.flash("notice", "Inventory already exists.");
             const nav = await utilities.getNav();
-            return res.status(400).render("inventory/add_classification", {
-                title: "Add Classification",
+            const { rows: classifications } = await invModel.getClassifications();
+            return res.status(400).render("inventory/add_inventory", {
+                title: "Add Inventory",
                 nav,
                 errors: [],
-                classification_name: req.body.classification_name || "",
+                classifications,
+                inv_make: req.body.inv_make || "",
+                inv_model: req.body.inv_model || "",
+                inv_year: req.body.inv_year || "",
+                inv_description: req.body.inv_description || "",
+                inv_price: req.body.inv_price || "",
+                inv_miles: req.body.inv_miles || "",
+                inv_color: req.body.inv_color || "",
+                classification_id: req.body.classification_id || "",
             });
         }
         return next(err);
