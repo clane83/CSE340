@@ -9,27 +9,27 @@
     </ul>
     <% } %>
 
-    <h1>
-        <%= title %>
-    </h1>
+        <h1>
+            <%= title %>
+        </h1>
 
-    <form class="auth-form" action="/account/login" method="post">
-        <div class="field">
-            <label for="account_email">Email address</label>
-            <input type="email" id="account_email" name="account_email" autocomplete="email"
-                placeholder="you@example.com" required>
-        </div>
+        <form class="auth-form" action="/account/login" method="post">
+            <div class="field">
+                <label for="account_email">Email address</label>
+                <input type="email" id="account_email" name="account_email" placeholder="you@example.com" required
+                    required value="<%= locals.account_email %>">
+            </div>
 
-        <div class="field">
-            <label for="account_password">Password</label>
-            <input type="password" id="account_password" name="account_password" autocomplete="current-password"
-                placeholder="Your password" required>
-        </div>
+            <div class="field">
+                <label for="account_password">Password</label>
+                <input type="password" id="account_password" name="account_password" placeholder="Your password"
+                    required>
+            </div>
 
-        <button class="btn" type="submit">Sign in</button>
-    </form>
+            <button class="btn" type="submit">Sign in</button>
+        </form>
 
-    <p class="muted">
-        Don’t have an account?
-        <a href="/account/registration">Create one</a>.
-    </p>
+        <p class="muted">
+            Don’t have an account?
+            <a href="/account/registration">Create one</a>.
+        </p>
