@@ -117,6 +117,12 @@ Util.addVehicleRules = () => [
         .notEmpty().withMessage("Provide a Color.")
         .bail()
         .isLength({ min: 2 }).withMessage("Provide a Color."),
+    body("classification_id")
+        .trim()
+        .notEmpty().withMessage("Choose a classification.")
+        .bail()
+        .isLength().withMessage("Choose a classification"),
+    
 ];
 
 // Check result
@@ -125,10 +131,12 @@ Util.checkAddVehicleData = async (req, res, next) => {
     if (!errors.isEmpty()) {
         errors.array().forEach(e => req.flash("notice", e.msg));
         const nav = await utilities.getNav();
+        const { rows: classifications } = await invModel.getClassifications();
         return res.status(400).render("inventory/add_inventory", {
             title: "Add Vehicle",
             nav,
             errors: errors.array(),
+            classifications,
             inv_make: req.body.inv_make,
             inv_model: req.body.inv_model,
             inv_year: req.body.inv_year,
