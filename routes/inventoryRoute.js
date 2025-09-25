@@ -20,4 +20,13 @@ router.post(
 );
 
 
+// Add classification
+router.get("/add-inventory", invController.buildAddInventory);
+router.post(
+    "/add-inventory",
+    classificationValidate.addVehicleRules(),
+    classificationValidate.checkAddVehicleData,
+    invController.registerInventory
+);
+
 module.exports = router;

@@ -71,4 +71,62 @@ invCont.registerClassification = async (req, res, next) => {
 };
 
 
+// GET add-inventory form
+invCont.buildAddInventory = async (req, res) => {
+    try {
+        const nav = await utilities.getNav();
+        const { rows: classifications } = await invModel.getClassifications(); // returns rows
+        res.render("inventory/add_inventory", {
+            title: "Add Inventory",
+            nav,
+            errors: [],
+            classifications,
+            // sticky:
+            classification_id: req.body?.classification_id || "",
+            // ...other stickies if you have them
+        });
+    } catch (err) {
+        next(err);
+    }
+};
+
+
+// POST add-inventory
+invCont.registerInventory = async (req, res, next) => {
+    try {
+        const nav = await utilities.getNav();
+        const { classification_name } = req.body;
+
+        const result = await invModel.addClassification(classification_name);
+
+        // If your DB returns rows on success:
+        if (result && result.rows) {
+            req.flash("notice", "Inventory added.");
+            return res.redirect("/inv/");
+        }
+
+        // Fallback if model returned a string error
+        req.flash("notice", "Could not add classification.");
+        return res.status(500).render("inventory/add_inventory", {
+            title: "Add Inventory",
+            nav,
+            errors: [],
+            classification_name,
+        });
+    } catch (err) {
+        // Handle PG unique violation gracefully
+        if (err.code === "23505") {
+            req.flash("notice", "Classification already exists.");
+            const nav = await utilities.getNav();
+            return res.status(400).render("inventory/add_classification", {
+                title: "Add Classification",
+                nav,
+                errors: [],
+                classification_name: req.body.classification_name || "",
+            });
+        }
+        return next(err);
+    }
+};
+
 module.exports = invCont;
