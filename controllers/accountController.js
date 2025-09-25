@@ -58,34 +58,44 @@ accountController.buildRegister = async function (req, res, next) {
 accountController.registerAccount = async function (req, res) {
     let nav = await utilities.getNav()
     const { account_firstname, account_lastname, account_email, account_password } = req.body
+ try {
+    
+    const hashed = await bcrypt.hash(account_password, 10);
 
-    const regResult = await accountModel(
-        account_firstname,
-        account_lastname,
-        account_email,
-        account_password
-    )
+    const regResult = await accountModel.registerAccount(
+      account_firstname,
+      account_lastname,
+      account_email,
+      hashed
+    );
 
-    if (regResult) {
-        req.flash(
-            "notice",
-            `Congratulations, you\'re registered ${account_firstname}. Please log in.`
-        )
-        res.status(201).render("account/login", {
-            title: "Login",
-            nav,
-            errors: []
-        })
-    } else {
-        req.flash("notice", "Sorry, the registration failed.")
-        res.status(501).render("account/registration", {
-            title: "Registration",
-            nav,
-            errors: []
-        })
+    if (regResult && regResult.rowCount === 1) {
+      req.flash("notice", `Congratulations, you're registered ${account_firstname}. Please log in.`);
+      return res.status(201).render("account/login", { title: "Login", nav, errors: [] });
     }
-}
 
+    req.flash("notice", "Sorry, the registration failed.");
+    return res.status(400).render("account/registration", {
+      title: "Registration",
+      nav,
+      errors: [],
+      account_firstname,
+      account_lastname,
+      account_email,
+    });
+  } catch (err) {
+    console.error(err);
+    req.flash("notice", "Unexpected error during registration.");
+    return res.status(500).render("account/registration", {
+      title: "Registration",
+      nav,
+      errors: [],
+      account_firstname,
+      account_lastname,
+      account_email,
+    });
+  }
+};
 
 
 
