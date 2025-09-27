@@ -17,7 +17,7 @@
                 <label for="classification_name">Classification Name</label>
                 <input type="text" id="classification_name" name="classification_name" autocomplete="off"
                     placeholder="Hybrid, Electric..." required
-                    >
+                    value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>">
             </div>
             <button class="btn" type="submit">Add Classification</button>
         </form>

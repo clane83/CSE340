@@ -7,88 +7,20 @@ const invCont = {}
  *  Build inventory by classification view
  * ************************** */
 invCont.buildByClassificationId = async function (req, res, next) {
-    try {
-        const classification_id = parseInt(req.params.classificationId, 10);
-        console.log(`Parsed classification_id in try: ${classification_id}, type: ${typeof classification_id}`);
-        const data = await invModel.getInventoryByClassificationId(classification_id);
-        const grid = await utilities.buildClassificationGrid(data);
-        let nav = await utilities.getNav();
-        if (data.length === 0) {
-            // Fetch classification_name using invModel.getClassifications
-            // console.log(`Fetching classifications for ID: ${classification_id}`);
-            const classResult = await invModel.getClassifications();
-            // console.log(`Classification query result in try: ${JSON.stringify(classResult.rows)}`);
-            const classification = classResult.rows.find(row => row.classification_id === classification_id);
-            if (!classification) {
-                return res.status(404).render("./inventory/classification", {
-                    title: "Classification Not Found",
-                    message: `Classification ID ${classification_id} does not exist.`,
-                    nav,
-                    grid: "",
-                });
-            }
-            const className = classification.classification_name;
-            return res.render("./inventory/classification", {
-                title: className + " vehicles",
-                nav,
-                grid,
-                message: "No inventory at this time.",
-            });
-        }
-        const className = data[0].classification_name;
-        res.render("./inventory/classification", {
-            title: className + " vehicles",
-            nav,
-            grid,
-        });
-    } catch (error) {
-        console.error("Error in buildByClassificationId:", error.message, error.stack);
-        let nav;
-        try {
-            nav = await utilities.getNav();
-        } catch (navError) {
-            console.error("Error fetching nav:", navError.message, navError.stack);
-            nav = '<ul class="navigation"><li><a href="/" title="Home page">Home</a></li></ul>';
-        }
+    const classification_id = req.params.classificationId
+    const data = await invModel.getInventoryByClassificationId(classification_id)
+    const grid = await utilities.buildClassificationGrid(data)
+    let nav = await utilities.getNav()
+    const className = data[0].classification_name
+    // req.flash("notice", "This is a flash message.")
+    res.render("./inventory/classification", {
+        title: className + " vehicles",
+        nav,
+        grid,
+    })
+}
 
-        const classification_id = parseInt(req.params.classificationId, 10);
-        console.log(`Parsed classification_id in catch: ${classification_id}, type: ${typeof classification_id}`);
-        let title = "Classification Not Found";
-        let message = "No inventory at this time.";
-
-        if (!isNaN(classification_id) && classification_id > 0) {
-            try {
-                console.log(`Fetching classifications for ID: ${classification_id}`);
-                const classResult = await invModel.getClassifications();
-                console.log(`Classification query result in catch: ${JSON.stringify(classResult.rows)}`);
-                const classification = classResult.rows.find(row => row.classification_id === classification_id);
-                if (classification && classification.classification_name) {
-                    title = `${classification.classification_name} vehicles`;
-                } else {
-                    console.log(`No classification found for ID: ${classification_id}`);
-                    message = `Classification ID ${classification_id} does not exist.`;
-                }
-            } catch (queryError) {
-                console.error("Error fetching classifications:", queryError.message, queryError.stack);
-                message = `Unable to retrieve classification ID ${classification_id}: ${queryError.message}`;
-            }
-        } else {
-            console.log(`Invalid classification ID received: ${req.params.classificationId}`);
-            message = `Invalid classification ID: ${req.params.classificationId}`;
-        }
-
-        res.status(500).render("./inventory/classification", {
-            title,
-            message,
-            nav,
-            grid: "",
-        });
-    }
-};
-
-/* ***************************
- *  Build management view
- * ************************** */
+// management hub
 invCont.buildManagement = async (req, res) => {
     const nav = await utilities.getNav();
     res.render("inventory/management", { title: "Management", nav });
@@ -184,7 +116,7 @@ invCont.registerInventory = async (req, res, next) => {
             Number(inv_miles),        // $6  inv_miles   
             inv_color,                // $7  inv_color
             Number(classification_id) // $8
-        );
+            );
 
         if (result && result.rows) {
             req.flash("notice", "Inventory added.");
