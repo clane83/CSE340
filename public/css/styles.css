@@ -254,6 +254,10 @@ h1 {
   background-color: var(--primary-accent-color);
 }
 
+.no-inventory {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
 
 /**************************** login ****************************/
 
@@ -262,6 +266,7 @@ h1 {
   padding: 1.25rem;
   margin: 1rem 0 1.5rem;
   margin-left: 1rem;
+  margin-right: 1rem;
   background: #fff;
   border: 1px solid var(--primary-accent-color);
   border-radius: 12px;
