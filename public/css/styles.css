@@ -277,9 +277,8 @@ h1 {
   font-weight: 600;
 }
 
-.field input[type="email"],
-.field input[type="password"],
-.field input[type="text"] {
+.field input,
+.field #classification_id {
   width: 100%;
   padding: 0.65rem 0.75rem;
   border: 1px solid var(--primary-accent-color);
