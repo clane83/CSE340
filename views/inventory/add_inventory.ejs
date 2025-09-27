@@ -37,45 +37,38 @@
 
             <div class="field">
                 <label for="inv_make">Make</label>
-                <input id="inv_make" name="inv_make" type="text" required
-                    >
+                <input id="inv_make" name="inv_make" type="text" required>
             </div>
 
             <div class="field">
                 <label for="inv_model">Model</label>
-                <input id="inv_model" name="inv_model" type="text" required
-                    >
+                <input id="inv_model" name="inv_model" type="text" required>
             </div>
 
             <div class="field">
                 <label for="inv_year">Year</label>
                 <input id="inv_year" name="inv_year" type="number" required min="1900"
-                    max="<%= new Date().getFullYear() + 1 %>"
-                    value="<%= typeof inv_year !== 'undefined' ? inv_year : '' %>">
+                    max="<%= new Date().getFullYear() + 1 %>">
             </div>
 
             <div class="field">
                 <label for="inv_price">Price (USD)</label>
-                <input id="inv_price" name="inv_price" type="number" step="0.01" required
-                    value="<%= typeof inv_price !== 'undefined' ? inv_price : '' %>">
+                <input id="inv_price" name="inv_price" type="number" step="0.01" required>
             </div>
 
             <div class="field">
                 <label for="inv_miles">Miles</label>
-                <input id="inv_miles" name="inv_miles" type="number" required
-                    value="<%= typeof inv_miles !== 'undefined' ? inv_miles : '' %>">
+                <input id="inv_miles" name="inv_miles" type="number" required>
             </div>
 
             <div class="field">
                 <label for="inv_color">Color</label>
-                <input id="inv_color" name="inv_color" type="text" required
-                    value="<%= typeof inv_color !== 'undefined' ? inv_color : '' %>">
+                <input id="inv_color" name="inv_color" type="text" required>
             </div>
 
             <div class="field">
                 <label for="inv_description">Description</label>
-                <textarea id="inv_description" name="inv_description" rows="5"
-                    required><%= typeof inv_description !== 'undefined' ? inv_description : '' %></textarea>
+                <textarea id="inv_description" name="inv_description" rows="5" required></textarea>
             </div>
 
             <button class="btn" type="submit">Add Vehicle</button>

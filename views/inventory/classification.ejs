@@ -1,21 +1,22 @@
 <!DOCTYPE html>
-<hmtl lang="en">
-    <%- include('../partials/head.ejs') %>
+<html lang="en">
+<%- include('../partials/head.ejs') %>
 
-        <body>
-            <div id="wrapper">
-                <main>
-                    <% if (title) { %>
-                        <h1>
-                            <%= title %>
-                        </h1>
-                        <% } else { res.redirect('/') } %>
+    <body>
+        <div id="wrapper">
+            <main>
+                <% if (title) { %>
+                    <h1>
+                        <%= title %>
+                    </h1>
+                    <% } else { res.redirect('/') } %>
 
-                            <%# messages() %>
-                                <%- grid %>
-                </main>
+                        <%# messages() %>
+                            <%- grid %>
+            </main>
 
-            </div>
-            <script src="./js/script.js"></script>
-        </body>
-</hmtl>
+        </div>
+        <script src="./js/script.js"></script>
+    </body>
+
+</html>
