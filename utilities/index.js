@@ -28,42 +28,33 @@ Util.getNav = async function (req, res, next) {
 * Build the classification view HTML
 * ************************************ */
 Util.buildClassificationGrid = async function (data) {
-    let grid = "";
-    console.log("buildClassificationGrid data:", JSON.stringify(data, null, 2));
+    let grid
     if (data.length > 0) {
-        grid = '<ul id="inv-display">';
+        grid = '<ul id="inv-display">'
         data.forEach(vehicle => {
-            console.log("Vehicle:", JSON.stringify(vehicle, null, 2));
-            const invId = vehicle.inv_id || "unknown";
-            const invYear = vehicle.inv_year || "Unknown";
-            const invMake = vehicle.inv_make || "Unknown";
-            const invModel = vehicle.inv_model || "Unknown";
-            const invThumbnail = vehicle.inv_thumbnail || "/images/no-image.png";
-            const invPrice = vehicle.inv_price != null ? vehicle.inv_price : 0;
-            grid += '<li>';
-            grid += '<a href="../../inv/detail/' + invId
-                + '" title="View ' + invMake + ' ' + invModel
-                + ' details"><img src="' + invThumbnail
-                + '" alt="Image of ' + invMake + ' ' + invModel
-                + ' on CSE Motors" /></a>';
-            grid += '<div class="namePrice">';
-            grid += '<hr />';
-            grid += '<h2>';
-            grid += '<a href="../../inv/detail/' + invId + '" title="View '
-                + invMake + ' ' + invModel + ' details">'
-                + invMake + ' ' + invModel + '</a>';
-            grid += '</h2>';
+            grid += '<li>'
+            grid += '<a href="../../inv/detail/' + vehicle.inv_id
+                + '" title="View ' + vehicle.inv_make + ' ' + vehicle.inv_model
+                + 'details"><img src="' + vehicle.inv_thumbnail
+                + '" alt="Image of ' + vehicle.inv_make + ' ' + vehicle.inv_model
+                + ' on CSE Motors" /></a>'
+            grid += '<div class="namePrice">'
+            grid += '<hr />'
+            grid += '<h2>'
+            grid += '<a href="../../inv/detail/' + vehicle.inv_id + '" title="View '
+                + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">'
+                + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
+            grid += '</h2>'
             grid += '<span>$'
-                + new Intl.NumberFormat('en-US').format(invPrice) + '</span>';
-            grid += '</div>';
-            grid += '</li>';
-        });
-        grid += '</ul>';
+                + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
+            grid += '</div>'
+            grid += '</li>'
+        })
+        grid += '</ul>'
     } else {
-        grid += '<div class="notice">No inventory at this time. Check back again soon.</div>';
+        grid += '<p class="notice">Sorry, no matching vehicles could be found.</p>'
     }
-    console.log("buildClassificationGrid output:", grid);
-    return grid;
+    return grid
 }
 
 /* **************************************
