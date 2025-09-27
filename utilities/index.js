@@ -60,7 +60,7 @@ Util.buildClassificationGrid = async function (data) {
         });
         grid += '</ul>';
     } else {
-        grid += '<div class="notice">No inventory at this time. Check back again soon.</div>';
+        grid += '<div class="no-inventory">No inventory at this time. Check back again soon.</div>';
     }
     console.log("buildClassificationGrid output:", grid);
     return grid;
