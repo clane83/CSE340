@@ -158,7 +158,7 @@ invCont.buildAddInventory = async (req, res, next) => {
 };
 
 
-// POST add-inventory
+
 // POST add-inventory
 invCont.registerInventory = async (req, res, next) => {
     try {
@@ -182,41 +182,28 @@ invCont.registerInventory = async (req, res, next) => {
             inv_miles,
             inv_color,
             classification_id,
-            environment: process.env.NODE_ENV
+            environment: process.env.NODE_ENV,
+            headers: req.headers['content-type']
         })
 
         // Validate required fields
-        if (!inv_make || !inv_model || !inv_year || !inv_price || !inv_miles || !inv_color || !classification_id) {
-            console.log("Validation failed: Missing required fields")
-            req.flash("notice", "All fields are required.")
-            const { rows: classifications } = await invModel.getClassifications()
-            return res.status(400).render("inventory/add_inventory", {
-                title: "Add Inventory",
-                nav,
-                errors: [{ msg: "All fields are required." }],
-                classifications,
-                inv_make: req.body.inv_make || "",
-                inv_model: req.body.inv_model || "",
-                inv_year: req.body.inv_year || "",
-                inv_description: req.body.inv_description || "",
-                inv_price: req.body.inv_price || "",
-                inv_miles: req.body.inv_miles || "",
-                inv_color: req.body.inv_color || "",
-                classification_id: req.body.classification_id || ""
-            })
-        }
+        const missingFields = []
+        if (!inv_make) missingFields.push("Make")
+        if (!inv_model) missingFields.push("Model")
+        if (!inv_year) missingFields.push("Year")
+        if (!inv_price) missingFields.push("Price")
+        if (!inv_miles) missingFields.push("Miles")
+        if (!inv_color) missingFields.push("Color")
+        if (!classification_id) missingFields.push("Classification")
 
-        // Validate classification_id exists
-        const classResult = await invModel.getClassifications()
-        const validClassification = classResult.rows.find(row => row.classification_id === Number(classification_id))
-        if (!validClassification) {
-            console.log(`Validation failed: Invalid classification_id ${classification_id}`)
-            req.flash("notice", "Invalid classification selected.")
+        if (missingFields.length > 0) {
+            console.log(`Validation failed: Missing fields: ${missingFields.join(", ")}`)
+            req.flash("notice", `Missing required fields: ${missingFields.join(", ")}`)
             const { rows: classifications } = await invModel.getClassifications()
             return res.status(400).render("inventory/add_inventory", {
                 title: "Add Inventory",
                 nav,
-                errors: [{ msg: "Invalid classification selected." }],
+                errors: [{ msg: `Missing required fields: ${missingFields.join(", ")}` }],
                 classifications,
                 inv_make: req.body.inv_make || "",
                 inv_model: req.body.inv_model || "",
@@ -237,12 +224,36 @@ invCont.registerInventory = async (req, res, next) => {
 
         if (isNaN(year) || isNaN(price) || isNaN(miles) || isNaN(classId)) {
             console.log("Validation failed: Invalid numeric values", { inv_year, inv_price, inv_miles, classification_id })
-            req.flash("notice", "Invalid numeric values provided.")
+            req.flash("notice", "Year, price, miles, and classification must be valid numbers.")
             const { rows: classifications } = await invModel.getClassifications()
             return res.status(400).render("inventory/add_inventory", {
                 title: "Add Inventory",
                 nav,
                 errors: [{ msg: "Year, price, miles, and classification must be valid numbers." }],
+                classifications,
+                inv_make: req.body.inv_make || "",
+                inv_model: req.body.inv_model || "",
+                inv_year: req.body.inv_year || "",
+                inv_description: req.body.inv_description || "",
+                inv_price: req.body.inv_price || "",
+                inv_miles: req.body.inv_miles || "",
+                inv_color: req.body.inv_color || "",
+                classification_id: req.body.classification_id || ""
+            })
+        }
+
+        // Validate classification_id exists
+        const classResult = await invModel.getClassifications()
+        console.log("Available classifications:", classResult.rows)
+        const validClassification = classResult.rows.find(row => row.classification_id === classId)
+        if (!validClassification) {
+            console.log(`Validation failed: Invalid classification_id ${classId}`)
+            req.flash("notice", `Invalid classification ID: ${classification_id}`)
+            const { rows: classifications } = await invModel.getClassifications()
+            return res.status(400).render("inventory/add_inventory", {
+                title: "Add Inventory",
+                nav,
+                errors: [{ msg: `Invalid classification ID: ${classification_id}` }],
                 classifications,
                 inv_make: req.body.inv_make || "",
                 inv_model: req.body.inv_model || "",
@@ -366,6 +377,7 @@ invCont.registerInventory = async (req, res, next) => {
                 classification_id: req.body.classification_id || ""
             })
         }
+        console.log("Unhandled database error in registerInventory")
         return next(err)
     }
 }
