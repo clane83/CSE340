@@ -37,6 +37,25 @@ async function getInventoryByClassificationId(classification_id) {
 }
 
 
+/* ***************************
+ *  Get all inventory by inv_id
+ * ************************** */
+async function getInventoryById(inv_id) {
+    try {
+        const sql = `
+      SELECT inv_id, inv_make, inv_model, inv_year, inv_description,
+             inv_price, inv_miles, inv_color, classification_id
+      FROM public.inventory
+      WHERE inv_id = $1`
+        const { rows } = await pool.query(sql, [inv_id])
+        return rows[0] || null
+    } catch (err) {
+        console.error("[inventory-model] getInventoryById:", err)
+        throw err
+    }
+}
+
+
 /* *****************************
 *   Add new classification
 * *************************** */
@@ -63,6 +82,46 @@ async function addInventory(inv_make, inv_model, inv_year, inv_description, inv_
     }
 }
 
+/* *****************************
+*   update inventory
+* *************************** */
+async function updateInventory({
+    inv_id, inv_make, inv_model, inv_year,
+    inv_description, inv_price, inv_miles, inv_color, classification_id
+}) {
+    try {
+        const sql = `
+      UPDATE public.inventory
+         SET inv_make=$1,
+             inv_model=$2,
+             inv_year=$3,
+             inv_description=$4,
+             inv_price=$5,
+             inv_miles=$6,
+             inv_color=$7,
+             classification_id=$8
+       WHERE inv_id=$9
+       RETURNING inv_id`
+        const params = [
+            inv_make,
+            inv_model,
+            Number(inv_year),
+            inv_description ?? "",
+            Number(inv_price),
+            Number(inv_miles),
+            inv_color ?? "",
+            Number(classification_id),
+            Number(inv_id),
+        ]
+        const { rows } = await pool.query(sql, params)
+        return rows[0] || null
+    } catch (err) {
+        console.error("[inventory-model] updateInventory:", err)
+        throw err
+    }
+}
 
-
-module.exports = { getClassifications, getInventoryByClassificationId, addClassification, addInventory };
+module.exports = {
+    getClassifications, getInventoryByClassificationId, addClassification, addInventory
+    , getInventoryById, updateInventory
+};

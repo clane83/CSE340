@@ -150,6 +150,33 @@ Util.checkAddVehicleData = async (req, res, next) => {
 };
 
 
+// Validate the update form
+Util.updateVehicleRules = () => [
+    body("inv_make").trim().notEmpty().withMessage("Provide a Make."),
+    body("inv_model").trim().notEmpty().withMessage("Provide a Model."),
+    body("inv_year").isInt({ min: 1886, max: 3000 }).withMessage("Provide a valid Year."),
+    body("inv_price").isFloat({ min: 0 }).withMessage("Provide a valid Price."),
+    body("inv_miles").isInt({ min: 0 }).withMessage("Provide valid Miles."),
+    body("inv_color").trim().notEmpty().withMessage("Provide a Color."),
+    body("classification_id").isInt({ min: 1 }).withMessage("Choose a classification."),
+    body("inv_id").isInt({ min: 1 }).withMessage("Missing inventory id."),
+]
 
+// On validation error, re-render the EDIT view with posted values
+Util.checkUpdateVehicleData = async (req, res, next) => {
+    const errors = validationResult(req)
+    if (errors.isEmpty()) return next()
+
+    const nav = await utilities.getNav()
+    const classificationSelect = await utilities.buildClassificationList(req.body.classification_id)
+
+    return res.status(400).render("inventory/edit-inventory", {
+        title: "Edit Vehicle",
+        nav,
+        classificationSelect,
+        errors: errors.array(),
+        ...req.body, // inv_id, inv_make, inv_model, etc.
+    })
+}
 
 module.exports = Util;
