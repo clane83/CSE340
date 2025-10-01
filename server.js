@@ -59,7 +59,7 @@ app.set("layout", "./layouts/layout") // not at views root
  *************************/
 app.use(express.static("public")) // set static folder
 //Index route
-app.get("/", baseController.buildHome)
+app.get("/", baseController.buildHome) 
 // Inventory routes
 app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
