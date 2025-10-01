@@ -134,6 +134,80 @@ invCont.getInventoryJSON = async (req, res, next) => {
     }
 }
 
+
+invCont.buildEditInventoryView = async (req, res, next) => {
+    try {
+        const nav = await utilities.getNav()
+        const inv_id = Number(req.params.inv_id)
+        if (!Number.isFinite(inv_id) || inv_id <= 0) {
+            req.flash("notice", "Invalid inventory id.")
+            return res.redirect("/inv")
+        }
+
+        const item = await invModel.getInventoryById(inv_id)
+        if (!item) {
+            req.flash("notice", "Vehicle not found.")
+            return res.redirect("/inv")
+        }
+
+        const classificationSelect =
+            await utilities.buildClassificationList(item.classification_id)
+
+        return res.render("inventory/edit-inventory", {
+            title: `Edit ${item.inv_year} ${item.inv_make} ${item.inv_model}`,
+            nav,
+            classificationSelect,
+            errors: null,
+            // Pre-fill fields
+            inv_id: item.inv_id,
+            inv_make: item.inv_make,
+            inv_model: item.inv_model,
+            inv_year: item.inv_year,
+            inv_price: item.inv_price,
+            inv_miles: item.inv_miles,
+            inv_color: item.inv_color,
+            inv_description: item.inv_description,
+            classification_id: item.classification_id,
+        })
+    } catch (err) {
+        return next(err)
+    }
+}
+
+/* ***************************
+ *  Post Inventory Update
+ * ************************** */
+invCont.updateInventory = async (req, res, next) => {
+    try {
+        const nav = await utilities.getNav()
+        const {
+            inv_id, inv_make, inv_model, inv_year, inv_description,
+            inv_price, inv_miles, inv_color, classification_id,
+        } = req.body
+
+        // Basic validation (add yours as needed)
+        if (!inv_id) {
+            req.flash("notice", "Missing inventory id.")
+            return res.redirect("/inv")
+        }
+
+        const result = await invModel.updateInventory({
+            inv_id, inv_make, inv_model, inv_year, inv_description,
+            inv_price, inv_miles, inv_color, classification_id,
+        })
+
+        if (!result) {
+            req.flash("notice", "Update failed or item not found.")
+            return res.redirect(`/inv/edit/${inv_id}`)
+        }
+
+        req.flash("notice", "Vehicle updated.")
+        return res.redirect("/inv")
+    } catch (err) {
+        return next(err)
+    }
+}
+
 // GET add-classification form
 invCont.buildAddClassification = async (req, res) => {
     const nav = await utilities.getNav();
