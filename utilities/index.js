@@ -99,7 +99,24 @@ Util.checkJWTToken = (req, res, next) => {
     }
 }
 
+/* ****************************************
+ * Build <select> for classifications
+ * (reused by Add New Inventory + Management)
+ * *************************************** */
+Util.buildClassificationList = async function (selectedId = null) {
+    const res = await invModel.getClassifications()
+    const rows = res?.rows ?? []
 
+    // Use the ID expected by your client JS:
+    let html = '<select id="classificationList" name="classification_id" required>'
+    html += '<option value="">Select…</option>'
+    for (const c of rows) {
+        const sel = Number(selectedId) === Number(c.classification_id) ? " selected" : ""
+        html += `<option value="${c.classification_id}"${sel}>${c.classification_name}</option>`
+    }
+    html += '</select>'
+    return html
+}
 
 
 module.exports = Util;

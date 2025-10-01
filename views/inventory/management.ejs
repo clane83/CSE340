@@ -1,10 +1,23 @@
-<!-- views/inventory/management.ejs -->
 <h1>
     <%= title %>
 </h1>
-<%- messages() %>
 
-    <ul>
-        <li><a href="/inv/add-classification">Add New Classification</a></li>
-        <li><a href="/inv/add-inventory">Add New Vehicle</a></li>
-    </ul>
+<div class="manage-actions">
+    <a class="btn" href="/inv/add-classification">Add New Classification</a>
+    <a class="btn" href="/inv/add-inventory">Add New Vehicle</a>
+</div>
+
+<h2>Manage Inventory</h2>
+<p>Select a classification from the list to see its vehicles.</p>
+
+<div class="field">
+    <selection for="classification_id">Classification</selection>
+    <%- classificationSelect %> <!-- built in controller via utilities.buildClassificationList() -->
+</div>
+
+<table id="inventoryDisplay"></table>
+
+<noscript>JavaScript must be enabled to use this page.</noscript>
+
+<!-- Hook up the client script -->
+<script src="/js/inventory.js" defer></script>
