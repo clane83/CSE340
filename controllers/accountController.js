@@ -2,6 +2,8 @@
 const utilities = require("../utilities");
 const accountModel = require("../models/account-model");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+require("dotenv").config()
 
 const accountController = {};
 
@@ -21,22 +23,41 @@ accountController.buildLogin = async function (req, res) {
 * *************************************** */
 
 accountController.loginAccount = async (req, res) => {
-  const nav = await utilities.getNav()
-  const { account_email /*, account_password*/ } = req.body
-
-  // TODO: replace with real check (e.g., accountModel.verifyPassword(...))
-  const ok = true // <- stub result
-
-  if (ok) {
-    req.flash("notice", `Welcome back, ${account_email}.`)
-    return res.redirect("/") // or render a dashboard
-  } else {
-    req.flash("notice", "Invalid email or password.")
-    return res.status(401).render("account/login", {
+  let nav = await utilities.getNav()
+  const { account_email, account_password } = req.body
+  const accountData = await accountModel.getAccountByEmail(account_email)
+  if (!accountData) {
+    req.flash("notice", "Please check your credentials and try again.")
+    res.status(400).render("account/login", {
       title: "Login",
       nav,
-      account_email, // keep what the user typed
+      errors: null,
+      account_email,
     })
+    return
+  }
+  try {
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
+      delete accountData.account_password
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      if (process.env.NODE_ENV === 'development') {
+        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      } else {
+        res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+      }
+      return res.redirect("/account/")
+    }
+    else {
+      req.flash("message notice", "Please check your credentials and try again.")
+      res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      })
+    }
+  } catch (error) {
+    throw new Error('Access Forbidden')
   }
 }
 
@@ -99,6 +120,33 @@ accountController.registerAccount = async function (req, res) {
   }
 };
 
+/* ****************************************
+ *  Process login request
+ * ************************************ */
+accountController.buildManagement = async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav()
+
+    // set by utilities.checkJWTToken
+    const user = res.locals.accountData
+    if (!user) {
+      req.flash('notice', 'Please log in')
+      return res.redirect('/account/login')
+    }
+
+    return res.render('account/management', {
+      title: 'Account Management',
+      nav,
+      account_firstname: user.account_firstname,
+      account_lastname: user.account_lastname,
+      account_email: user.account_email,
+      account_type: user.account_type,
+      messages: req.flash(),
+    })
+  } catch (error) {
+    return next(error)
+  }
+}
 
 
 module.exports = accountController;
