@@ -3,12 +3,17 @@ const express = require("express")
 const router = new express.Router()
 const invController = require("../controllers/invController")
 const classificationValidate = require('../utilities/vehicle')
+const utilities = require("../utilities")
+
+
+// Management hub
+router.get("/", utilities.handleErrors(invController.buildManagement))
+
+// JSON endpoint for the client script
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
-
-// Management hub
-router.get("/", invController.buildManagement);
 
 // Add classification
 router.get("/add-classification", invController.buildAddClassification);
@@ -18,6 +23,8 @@ router.post(
     classificationValidate.checkAddClassData,
     invController.registerClassification
 );
+
+
 
 
 // Add classification

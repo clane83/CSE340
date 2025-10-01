@@ -4,9 +4,18 @@ const pool = require("../database/");
  *  Get all classification data
  * ************************** */
 async function getClassifications() {
-    return await pool.query("SELECT * FROM public.classification ORDER BY classification_name");
-
-};
+    try {
+        const sql = `
+      SELECT classification_id, classification_name
+      FROM public.classification
+      ORDER BY classification_name`
+        const { rows } = await pool.query(sql)
+        return { rows } // keeps existing callers that use data.rows
+    } catch (err) {
+        console.error("[inventory-model] getClassifications:", err)
+        throw err
+    }
+}
 
 
 /* ***************************
@@ -14,31 +23,16 @@ async function getClassifications() {
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
     try {
-        const sql = `INSERT INTO inventory (
-            inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id, inv_thumbnail, inv_image
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`
-        const result = await pool.query(sql, [
-            inv_make,
-            inv_model,
-            inv_year,
-            inv_description || "",
-            inv_price,
-            inv_miles,
-            inv_color,
-            classification_id,
-            "/images/no-image.png",
-            "/images/no-image.png"
-        ])
-        console.log("addInventory result:", result.rows)
-        return result
-    } catch (error) {
-        console.error("addInventory error:", {
-            message: error.message,
-            code: error.code,
-            stack: error.stack,
-            params: [inv_make, inv_model, inv_year, inv_description, inv_price, inv_miles, inv_color, classification_id]
-        })
-        throw error
+        const sql = `
+      SELECT inv_id, inv_make, inv_model, inv_year, inv_price, inv_miles
+      FROM public.inventory
+      WHERE classification_id = $1
+      ORDER BY inv_make, inv_model, inv_year`
+        const { rows } = await pool.query(sql, [classification_id])
+        return { rows } // <-- same shape as before
+    } catch (err) {
+        console.error("[inventory-model] getInventoryByClassificationId:", err)
+        throw err
     }
 }
 

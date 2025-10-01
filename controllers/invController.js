@@ -90,9 +90,49 @@ invCont.buildByClassificationId = async function (req, res, next) {
  *  Build management view
  * ************************** */
 invCont.buildManagement = async (req, res) => {
-    const nav = await utilities.getNav();
-    res.render("inventory/management", { title: "Management", nav });
-};
+    try {
+        const nav = await utilities.getNav()
+        const classificationSelect = await utilities.buildClassificationList() // ✅
+        return res.render("inventory/management", {
+            title: "Inventory Management",
+            nav,
+            classificationSelect, // ✅
+            errors: null,
+            messages: req.flash(),
+        })
+    } catch (err) {
+        return next(err)
+    }
+}
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+    try {
+        const raw = req.params.classification_id
+        const id = Number(raw)
+
+        // Validate id to prevent DB errors
+        if (!Number.isFinite(id) || id <= 0) {
+            console.warn("[getInventoryJSON] invalid id:", raw)
+            return res.status(400).json({ error: "Invalid classification id" })
+        }
+
+        const data = await invModel.getInventoryByClassificationId(id)
+
+        // Normalize to array regardless of driver shape
+        const items = Array.isArray(data) ? data : (data?.rows ?? [])
+
+        return res
+            .type("application/json")
+            .status(200)
+            .json(items)
+    } catch (err) {
+        console.error("[getInventoryJSON] ERROR:", err?.message || err)
+        return next(err) // utilities.handleErrors will format a 500
+    }
+}
 
 // GET add-classification form
 invCont.buildAddClassification = async (req, res) => {
@@ -381,5 +421,7 @@ invCont.registerInventory = async (req, res, next) => {
         return next(err)
     }
 }
+
+
 
 module.exports = invCont;
