@@ -91,7 +91,7 @@ Util.addVehicleRules = () => [
         .trim()
         .notEmpty().withMessage("Provide a Model.")
         .bail()
-        .isLength({ min: 2 }).withMessage("Provide a Model."),
+        .isLength({ min: 1 }).withMessage("Provide a Model."),
     body("inv_year")
         .trim()
         .notEmpty().withMessage("Provide a Year.")
