@@ -1,0 +1,32 @@
+<h1>
+    <%= title %>
+</h1>
+<p>Confirm Deletion — The delete is permanent and cannot be undone.</p>
+
+<form action="/inv/delete" method="post" class="form">
+    <div class="field">
+        <label for="inv_make">Make</label>
+        <input id="inv_make" name="inv_make" value="<%= inv_make %>" readonly>
+    </div>
+
+    <div class="field">
+        <label for="inv_model">Model</label>
+        <input id="inv_model" name="inv_model" value="<%= inv_model %>" readonly>
+    </div>
+
+    <div class="field">
+        <label for="inv_year">Year</label>
+        <input id="inv_year" name="inv_year" type="number" value="<%= inv_year %>" readonly>
+    </div>
+
+    <div class="field">
+        <label for="inv_price">Price</label>
+        <input id="inv_price" name="inv_price" type="number" step="0.01" value="<%= inv_price %>" readonly>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a href="/inv" class="btn btn-secondary">Cancel</a>
+
+    <!-- Keep the primary key -->
+    <input type="hidden" name="inv_id" value="<%= inv_id %>">
+</form>
