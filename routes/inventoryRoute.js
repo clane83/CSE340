@@ -48,4 +48,16 @@ router.post(
     invController.registerInventory
 );
 
+router.get(
+    "/delete/:inv_id",
+    utilities.handleErrors(invController.buildDeleteInventoryView)
+);
+
+router.post(
+    "/delete",
+    utilities.handleErrors(invController.deleteInventory)
+);
+
+
+
 module.exports = router;
