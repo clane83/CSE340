@@ -25,6 +25,10 @@ const app = express();
 /* ***********************
  * Middleware
  * ************************/
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1); // <- Render is behind a proxy
+}
+
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -59,7 +63,7 @@ app.set("layout", "./layouts/layout") // not at views root
  *************************/
 app.use(express.static("public")) // set static folder
 //Index route
-app.get("/", baseController.buildHome) 
+app.get("/", baseController.buildHome)
 // Inventory routes
 app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
