@@ -4,21 +4,38 @@ const router = new express.Router()
 const invController = require("../controllers/invController")
 const classificationValidate = require('../utilities/vehicle')
 const utilities = require("../utilities")
+const { requireEmployeeOrAdmin } = require("../utilities/account-validation")
 
 
-// Management hub
-router.get("/", utilities.handleErrors(invController.buildManagement))
 
-// JSON endpoint for the client script
-router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+/**************
+ * Route to inventory management view
+ * URL: /inv/
+ * *************/
+router.get("/", requireEmployeeOrAdmin, utilities.handleErrors(invController.buildManagement))
 
-// Route to build inventory by classification view
+
+/************
+ * Get inventory by classificationId in JSON format
+ * URL: /inv/getInventory/:classification_id
+ * *********
+ */
+router.get("/getInventory/:classification_id", requireEmployeeOrAdmin, utilities.handleErrors(invController.getInventoryJSON))
+
+/**********
+ * Route to build inventory by classification view
+ * URL: /inv/type/:classificationId
+ */
 router.get("/type/:classificationId", invController.buildByClassificationId);
 
-// Add classification
-router.get("/add-classification", invController.buildAddClassification);
+/*********
+ * Add classification
+ */
+router.get("/add-classification", requireEmployeeOrAdmin,
+    invController.buildAddClassification);
 router.post(
     "/add-classification",
+    requireEmployeeOrAdmin,
     classificationValidate.addClassificationRules(),
     classificationValidate.checkAddClassData,
     invController.registerClassification
@@ -30,26 +47,37 @@ router.post(
  * *************** */
 router.get(
     "/edit/:inv_id",
-    utilities.handleErrors(invController.buildEditInventoryView)
+    requireEmployeeOrAdmin, utilities.handleErrors(invController.buildEditInventoryView)
 )
 
 router.post("/update/",
+    requireEmployeeOrAdmin,
     classificationValidate.updateVehicleRules(),
     classificationValidate.checkUpdateVehicleData,
     utilities.handleErrors(invController.updateInventory))
 
 
-// Add classification
-router.get("/add-inventory", invController.buildAddInventory);
+/************
+ * Add inventory
+ * URL: /inv/add-inventory
+ * ********** */
+
+router.get("/add-inventory", requireEmployeeOrAdmin, invController.buildAddInventory);
 router.post(
     "/add-inventory",
+    requireEmployeeOrAdmin,
     classificationValidate.addVehicleRules(),
     classificationValidate.checkAddVehicleData,
     invController.registerInventory
 );
 
+/****************
+ * Delete inventory
+ * URL: /inv/delete/:inv_id
+ * *************** */
+
 router.get(
-    "/delete/:inv_id",
+    "/delete/:inv_id", requireEmployeeOrAdmin,
     utilities.handleErrors(invController.buildDeleteInventoryView)
 );
 
@@ -57,6 +85,8 @@ router.post(
     "/delete",
     utilities.handleErrors(invController.deleteInventory)
 );
+
+
 
 
 

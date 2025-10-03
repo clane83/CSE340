@@ -18,6 +18,7 @@ const flash = require("connect-flash");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
 const utilities = require("./utilities")
+const validate = require('./utilities/account-validation')
 const app = express();
 
 
@@ -44,9 +45,15 @@ app.use((req, res, next) => {
   res.locals.messages = require('express-messages')(req, res)
   next()
 })
+app.use((req, res, next) => {
+  res.locals.notice = req.flash('notice')
+  res.locals.errors = req.flash('errors')
+  next()
+})
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 app.use(cookieParser())
+app.use(validate.attachAuthLocals) //activate attachAuthLocals for all routes
 app.use(utilities.checkJWTToken)
 
 
