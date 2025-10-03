@@ -72,8 +72,17 @@ Util.buildClassificationGrid = async function (data) {
 /* **************************************
 * error handling
 * ************************************ */
-Util.handleErrors = (fn) => (req, res, next) =>
-    Promise.resolve(fn(req, res, next)).catch(next);
+Util.handleErrors = (fn) => {
+    if (typeof fn !== "function") {
+        throw new TypeError("handleErrors(...) needs a function, e.g. handleErrors(controller.action)")
+    }
+    return (req, res, next) => {
+        try {
+            const out = fn(req, res, next)
+            return out && typeof out.then === "function" ? out.catch(next) : out
+        } catch (err) { return next(err) }
+    }
+}
 
 
 /* ****************************************
@@ -81,21 +90,28 @@ Util.handleErrors = (fn) => (req, res, next) =>
 **************************************** */
 Util.checkJWTToken = (req, res, next) => {
     if (req.cookies.jwt) {
-        jwt.verify(
-            req.cookies.jwt,
-            process.env.ACCESS_TOKEN_SECRET,
-            function (err, accountData) {
-                if (err) {
-                    req.flash("Please log in")
-                    res.clearCookie("jwt")
-                    return res.redirect("/account/login")
-                }
-                res.locals.accountData = accountData
-                res.locals.loggedin = 1
-                next()
-            })
+        jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (err, accountData) => {
+            if (err) {
+                req.flash("notice", "Please log in")  // add the key
+                res.clearCookie("jwt")
+                return res.redirect("/account/login")
+            }
+            res.locals.loggedIn = true              // camel I
+            res.locals.account = {                  // normalize for views
+                account_id: accountData.account_id,
+                account_firstname: accountData.account_firstname,
+                account_lastname: accountData.account_lastname,
+                account_email: accountData.account_email,
+                account_type: accountData.account_type,
+            }
+            res.locals.accountData = res.locals.account // backwards compat
+            return next()
+        })
     } else {
-        next()
+        res.locals.loggedIn = false
+        res.locals.account = null
+        res.locals.accountData = null
+        return next()
     }
 }
 

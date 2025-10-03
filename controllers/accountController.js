@@ -134,13 +134,16 @@ accountController.buildManagement = async (req, res, next) => {
       return res.redirect('/account/login')
     }
 
+    let account = user
+    try {
+      const row = await accountModel.getById(user.account_id)
+      if (row) account = row
+    } catch (_) { /* ignore */ }
+
     return res.render('account/management', {
       title: 'Account Management',
       nav,
-      account_firstname: user.account_firstname,
-      account_lastname: user.account_lastname,
-      account_email: user.account_email,
-      account_type: user.account_type,
+      account,
       messages: req.flash(),
     })
   } catch (error) {
@@ -148,5 +151,101 @@ accountController.buildManagement = async (req, res, next) => {
   }
 }
 
+/* ****************************************
+ *  update account view
+ * ************************************ */
+accountController.buildUpdateView = async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav()
+    const { account_id } = req.params
+    const account = await accountModel.getById(account_id)
+    if (!account) {
+      req.flash("notice", "Account not found.")
+      return res.redirect("/account/management")
+    }
+    return res.render("account/update", {
+      title: "Update Account",
+      nav,
+      account,
+    })
+  } catch (err) { return next(err) }
+}
+
+/* ****************************************
+ *  process account view
+ * ************************************ */
+accountController.handleAccountUpdate = async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav()
+    const { account_id, account_firstname, account_lastname, account_email } = req.body
+
+    const result = await accountModel.updateAccount({
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+    })
+
+    if (result && result.rowCount === 1) {
+      // refresh JWT so header reflects updated name/email
+      const fresh = await accountModel.getById(account_id)
+      const jwt = require("jsonwebtoken")
+      const token = jwt.sign({
+        account_id: fresh.account_id,
+        account_firstname: fresh.account_firstname,
+        account_lastname: fresh.account_lastname,
+        account_email: fresh.account_email,
+        account_type: fresh.account_type,
+      }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1h" })
+      res.cookie("jwt", token, { httpOnly: true, secure: process.env.NODE_ENV !== "development" })
+
+      req.flash("notice", "Account updated successfully.")
+      return res.redirect("/account/management")
+    }
+
+    req.flash("notice", "No changes were made.")
+    return res.status(400).render("account/update", {
+      title: "Update Account",
+      nav,
+      account: { account_id },
+      form: { account_firstname, account_lastname, account_email },
+    })
+  } catch (err) { return next(err) }
+}
+
+/* ****************************************
+ *  Process password change
+ * ************************************ */
+accountController.handlePasswordChange = async (req, res, next) => {
+  try {
+    const nav = await utilities.getNav()
+    const { account_id, account_password } = req.body
+
+    const hash = await bcrypt.hash(account_password, 10)
+    const result = await accountModel.updatePassword({ account_id, password_hash: hash })
+
+    if (result && result.rowCount === 1) {
+      req.flash("notice", "Password updated successfully.")
+      return res.redirect("/account/management")
+    }
+
+    req.flash("notice", "Password update failed.")
+    return res.status(400).render("account/update", {
+      title: "Update Account",
+      nav,
+      account: { account_id },
+    })
+  } catch (err) { return next(err) }
+}
+
+
+/* ****************************************
+ *  Process logout request
+ * ************************************ */
+accountController.logout = async (req, res) => {
+  res.clearCookie("jwt", { httpOnly: true, secure: process.env.NODE_ENV !== "development" })
+  req.flash("notice", "You have been logged out.")
+  return res.redirect("/")
+}
 
 module.exports = accountController;

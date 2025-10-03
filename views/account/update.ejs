@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("../partials/head.ejs") %>
+
+    <body>
+        <div id="wrapper">
+
+
+            <main class="wrap">
+                <% if (typeof notice !=='undefined' && notice && notice.length) { %>
+                    <div class="notice">
+                        <%= Array.isArray(notice) ? notice.join('<br>') : notice %>
+                    </div>
+                    <% } %>
+
+                        <% if (typeof errors !=='undefined' && errors && errors.length) { %>
+                            <ul class="errors">
+                                <% errors.forEach(e=> { %>
+                                    <li>
+                                        <%= (e && e.msg) ? e.msg : e %>
+                                    </li>
+                                    <% }) %>
+                            </ul>
+                            <% } %>
+
+                                <h1>
+                                    <%= title || 'Update Account' %>
+                                </h1>
+
+                                <!-- Account Update Form -->
+                                <section class="card">
+                                    <h2>Account Update</h2>
+                                    <form action="/account/update" method="post" novalidate>
+                                        <div class="field">
+                                            <label for="account_firstname">First Name</label>
+                                            <input id="account_firstname" name="account_firstname" type="text" required
+                                                value="<%= (typeof form !== 'undefined' && form.account_firstname) ? form.account_firstname : (account && account.account_firstname || '') %>">
+                                        </div>
+
+                                        <div class="field">
+                                            <label for="account_lastname">Last Name</label>
+                                            <input id="account_lastname" name="account_lastname" type="text" required
+                                                value="<%= (typeof form !== 'undefined' && form.account_lastname) ? form.account_lastname : (account && account.account_lastname || '') %>">
+                                        </div>
+
+                                        <div class="field">
+                                            <label for="account_email">Email</label>
+                                            <input id="account_email" name="account_email" type="email" required
+                                                value="<%= (typeof form !== 'undefined' && form.account_email) ? form.account_email : (account && account.account_email || '') %>">
+                                        </div>
+
+                                        <input type="hidden" name="account_id"
+                                            value="<%= (account && account.account_id) ? account.account_id : '' %>">
+
+                                        <div class="actions">
+                                            <button type="submit">Save changes</button>
+                                        </div>
+                                    </form>
+                                </section>
+
+                                <!-- Change Password Form -->
+                                <section class="card">
+                                    <h2>Change Password</h2>
+                                    <p>Enter a new password to replace your current one. Requirements: at least 12
+                                        characters, with upper, lower, number, and symbol.</p>
+
+                                    <form action="/account/update-password" method="post" novalidate>
+                                        <div class="field">
+                                            <label for="account_password">New Password</label>
+                                            <input id="account_password" name="account_password" type="password"
+                                                required autocomplete="new-password">
+                                        </div>
+
+                                        <input type="hidden" name="account_id"
+                                            value="<%= (account && account.account_id) ? account.account_id : '' %>">
+
+                                        <div class="actions">
+                                            <button type="submit">Change password</button>
+                                        </div>
+                                    </form>
+                                </section>
+            </main>
+
+            <%- include("../partials/footer.ejs") %>
+        </div>
+
+        <script src="/js/script.js"></script>
+    </body>
+
+</html>
