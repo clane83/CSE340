@@ -4,6 +4,20 @@
         margin-right: 3.5rem;
     }
 
+    .auth-form,
+    .update-account .card {
+        max-width: 700px;
+        padding: 1.25rem;
+        margin: 1rem 0 1.5rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        background: #fff;
+        border: 1px solid var(--primary-accent-color);
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+    }
+
 }
 
 
@@ -159,6 +173,20 @@
 
         margin: 0 auto;
         justify-items: center;
+    }
+
+    .auth-form,
+    .update-account .card {
+        max-width: 1200px;
+        padding: 1.25rem;
+        margin: 1rem 0 1.5rem;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        background: #fff;
+        border: 1px solid var(--primary-accent-color);
+        border-radius: 12px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
     }
 }
 

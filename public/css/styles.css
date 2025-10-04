@@ -261,7 +261,8 @@ h1 {
 
 /**************************** login ****************************/
 
-.auth-form {
+.auth-form,
+.update-account .card {
   max-width: 420px;
   padding: 1.25rem;
   margin: 1rem 0 1.5rem;
@@ -271,9 +272,16 @@ h1 {
   border: 1px solid var(--primary-accent-color);
   border-radius: 12px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+
 }
 
-.signup {
+.signup,
+.account-management h2,
+.account-management p,
+.account-management h3,
+.manage-actions,
+#inventoryDisplay {
   margin-left: 1rem;
   margin-right: 1rem;
 }
