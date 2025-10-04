@@ -6,7 +6,7 @@
         <div id="wrapper">
 
 
-            <main class="wrap">
+            <main class="update-account">
                 <% if (typeof notice !=='undefined' && notice && notice.length) { %>
                     <div class="notice">
                         <%= Array.isArray(notice) ? notice.join('<br>') : notice %>
@@ -81,7 +81,6 @@
                                 </section>
             </main>
 
-            <%- include("../partials/footer.ejs") %>
         </div>
 
         <script src="/js/script.js"></script>

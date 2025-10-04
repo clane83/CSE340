@@ -1,19 +1,21 @@
 <h1>
     <%= title %>
 </h1>
+<section class="manage-actions">
+    <div>
+        <a class="btn" href="/inv/add-classification">Add New Classification</a>
+        <a class="btn" href="/inv/add-inventory">Add New Vehicle</a>
+    </div>
 
-<div class="manage-actions">
-    <a class="btn" href="/inv/add-classification">Add New Classification</a>
-    <a class="btn" href="/inv/add-inventory">Add New Vehicle</a>
-</div>
+    <h2>Manage Inventory</h2>
+    <p>Select a classification from the list to see its vehicles.</p>
 
-<h2>Manage Inventory</h2>
-<p>Select a classification from the list to see its vehicles.</p>
+    <div class="field">
+        <selection for="classification_id">Classification</selection>
+        <%- classificationSelect %> <!-- built in controller via utilities.buildClassificationList() -->
+    </div>
+</section>
 
-<div class="field">
-    <selection for="classification_id">Classification</selection>
-    <%- classificationSelect %> <!-- built in controller via utilities.buildClassificationList() -->
-</div>
 
 <table id="inventoryDisplay"></table>
 
