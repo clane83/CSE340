@@ -1,0 +1,64 @@
+<% if (Array.isArray(list)) { %>
+    <% if (!list.length) { %>
+        <% } else { %>
+            <!-- render cards -->
+            <% } %>
+                <% } %>
+                    <main class="wrap">
+                        <h1>
+                            <%= title %>
+                        </h1>
+
+                        <% if (typeof item !=='undefined' && item) { %>
+                            <!-- detail view -->
+                            <article class="vehicle-detail">
+                                <% if (item.up_inv_thumbnail) { %>
+                                    <img class="vehicle-img" src="<%= item.up_inv_thumbnail %>"
+                                        alt="<%= item.up_inv_item %>">
+                                    <% } %>
+                                        <h2 class="vehicle-title">
+                                            <%= item.up_inv_item %>
+                                        </h2>
+                                        <p class="vehicle-meta"><strong>Type:</strong>
+                                            <%= item.up_type %>
+                                        </p>
+                                        <p class="vehicle-price"><strong>Price:</strong> $<%=
+                                                Number(item.up_inv_price).toLocaleString() %>
+                                        </p>
+                                        <% if (item.up_inv_description) { %>
+                                            <p class="vehicle-desc">
+                                                <%= item.up_inv_description %>
+                                            </p>
+                                            <% } %>
+                            </article>
+
+                            <% } else if (typeof list !=='undefined' && Array.isArray(list)) { %>
+                                <% if (!list.length) { %>
+                                    <p class="notice">No <%= title %> found for this category.</p>
+                                    <% } else { %>
+                                        <ul class="inv-display">
+                                            <% list.forEach(u=> { %>
+                                                <li class="inv-card">
+                                                    <a href="/upgrade/item/<%= u.up_inv_id %>">
+                                                        <% if (u.up_inv_thumbnail) { %>
+                                                            <img src="<%= u.up_inv_thumbnail %>"
+                                                                alt="<%= u.up_inv_item %>">
+                                                            <% } %>
+                                                                <div class="inv-name">
+                                                                    <%= u.up_inv_item %>
+                                                                </div>
+                                                                <div class="inv-price">$<%=
+                                                                        Number(u.up_inv_price).toLocaleString() %>
+                                                                </div>
+                                                    </a>
+                                                </li>
+                                                <% }) %>
+                                        </ul>
+                                        <% } %>
+
+                                            <% } else { %>
+                                                <p class="notice">Nothing to show.</p>
+                                                <% } %>
+
+                                                    <p><a href="javascript:history.back()">Back</a></p>
+                    </main>

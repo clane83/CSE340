@@ -12,6 +12,7 @@ const baseController = require("./controllers/baseController");
 const inventoryRoute = require('./routes/inventoryRoute');
 const vehicleRoute = require('./routes/vehicleRoute');
 const accountRoute = require('./routes/accountRoute')
+const upgradeRoute = require("./routes/upgradeRoute");
 const session = require("express-session");
 const pool = require('./database/');
 const flash = require("connect-flash");
@@ -75,6 +76,7 @@ app.get("/", baseController.buildHome)
 app.use("/inv", inventoryRoute)
 app.use("/inv", vehicleRoute);
 app.use("/account", accountRoute);
+app.use("/upgrade", upgradeRoute);
 
 /* ***********************
  * Local Server Information
