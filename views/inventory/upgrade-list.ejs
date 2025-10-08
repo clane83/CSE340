@@ -1,0 +1,29 @@
+<body>
+    <h1>
+        <%= title %>
+    </h1>
+
+    <% if (!Array.isArray(list) || list.length===0) { %>
+        <p class="notice">No <%= title %> found for this category.</p>
+        <% } else { %>
+            <ul class="inv-display">
+                <% list.forEach(u=> { %>
+                    <li class="inv-card">
+                        <a href="/upgrade/item/<%= u.up_inv_id %>">
+                            <% const img=u.up_inv_image || u.up_inv_thumbnail; %>
+                                <% if (img) { %>
+                                    <img src="<%= img %>" alt="<%= u.up_inv_item %>">
+                                    <% } %>
+                                        <div class="inv-name">
+                                            <%= u.up_inv_item %>
+                                        </div>
+                                        <div class="inv-price">$<%= Number(u.up_inv_price).toLocaleString() %>
+                                        </div>
+                        </a>
+                    </li>
+                    <% }) %>
+            </ul>
+            <% } %>
+                </div>
+                <script src="./js/script.js"></script>
+</body>

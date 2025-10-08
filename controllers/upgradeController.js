@@ -1,10 +1,10 @@
+// controllers/upgradeController.js
 const upgradeModel = require("../models/upgrade-model");
 const utilities = require("../utilities");
 
-
 const upgradeCtrl = {};
 
-// /upgrade/type/:type_id  → list
+// /upgrade/type/:type_id  → LIST
 upgradeCtrl.listByType = async (req, res, next) => {
     try {
         const typeId = Number(req.params.type_id);
@@ -12,59 +12,55 @@ upgradeCtrl.listByType = async (req, res, next) => {
 
         const list = await upgradeModel.getInventoryByUpgradeId(typeId);
 
+        // get a friendly title even when empty
         let typeName = 'Upgrades';
-        if (Array.isArray(list) && list.length > 0) {
+        if (Array.isArray(list) && list.length) {
             typeName = list[0].up_type ?? 'Upgrades';
-        } else {
-            // fetch the type label so the heading is meaningful even with no rows
-            try {
-                const t = await upgradeModel.getTypeNameById(typeId);
-                if (t) typeName = t;
-            } catch (e) {
-                console.warn('[upgrade] getTypeNameById failed:', e.message);
-            }
+        } else if (typeof upgradeModel.getTypeNameById === 'function') {
+            try { typeName = (await upgradeModel.getTypeNameById(typeId)) || 'Upgrades'; } catch { }
         }
 
-        return res.render('inventory/upgrades', {
+        return res.render("inventory/upgrade-list", { // ✅ list view
             title: typeName,
             nav,
             list: Array.isArray(list) ? list : [],
-            layout: './layouts/vehicle',
+            layout: "./layouts/layout",
         });
     } catch (e) { next(e); }
 };
 
-/* ***************************
- *  Build inventory by upgrade view
- * ************************** */
+// /upgrade/item/:upInvId  → DETAIL
 upgradeCtrl.buildUpgrade = async (req, res, next) => {
     try {
         const upInvId = Number(req.params.upInvId);
         const nav = await utilities.getNav();
 
         if (!Number.isFinite(upInvId)) {
-            return res.status(400).render("inventory/upgrades", {
-                title: "Invalid request", nav, list: [], item: null, layout: "./layouts/vehicle",
-            });
-        }
-
-        console.log("[upgrade][controller] fetching item upInvId =", upInvId);
-        const rows = await upgradeModel.getMonsterTruckUpgradeId(upInvId);
-        console.log("[upgrade][controller] rows length =", Array.isArray(rows) ? rows.length : "not array");
-
-        const item = rows && rows[0];
-        if (!item) {
-            return res.status(404).render("inventory/upgrades", {
-                title: "Not found",
+            return res.status(400).render("inventory/upgrades", { // ✅ detail view
+                title: "Invalid request",
                 nav,
-                list: [],
                 item: null,
                 layout: "./layouts/vehicle",
             });
         }
 
-        return res.render("inventory/upgrades", {
-            title: item.up_inv_item, nav, list: [], item, layout: "./layouts/vehicle",
+        const rows = await upgradeModel.getMonsterTruckUpgradeId(upInvId);
+        const item = rows && rows[0];
+
+        if (!item) {
+            return res.status(404).render("inventory/upgrades", { // ✅ detail view
+                title: "Not found",
+                nav,
+                item: null,
+                layout: "./layouts/vehicle",
+            });
+        }
+
+        return res.render("inventory/upgrades", { // ✅ detail view
+            title: item.up_inv_item,
+            nav,
+            item,
+            layout: "./layouts/vehicle",
         });
     } catch (e) { next(e); }
 };

@@ -34,7 +34,7 @@ Util.buildClassificationGrid = async function (data) {
     let grid = "";
     console.log("buildClassificationGrid data:", JSON.stringify(data, null, 2));
     if (data.length > 0) {
-        grid = '<ul id="inv-display">';
+        grid = '<ul class="inv-display">';
         data.forEach(vehicle => {
             console.log("Vehicle:", JSON.stringify(vehicle, null, 2));
             const invId = vehicle.inv_id || "unknown";
