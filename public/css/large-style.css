@@ -151,7 +151,8 @@
         /* Make figures direct grid items */
     }
 
-    .inv-display {
+    .inv-display,
+    .up-display {
         display: grid;
         grid-template-columns: repeat(2, minmax(280px, 1fr));
         gap: 1.25rem;
@@ -166,7 +167,9 @@
 }
 
 @media screen and (min-width: 900px) {
-    .inv-display {
+
+    .inv-display,
+    .up-display {
         display: grid;
         grid-template-columns: repeat(3, minmax(280px, 1fr));
         gap: 1.25rem;
@@ -191,7 +194,9 @@
 }
 
 @media screen and (min-width: 1200px) {
-    .inv-display {
+
+    .inv-display,
+    .up-display {
         display: grid;
         grid-template-columns: repeat(4, minmax(280px, 1fr));
         gap: 1.25rem;
@@ -202,7 +207,9 @@
 }
 
 @media screen and (min-width: 1600px) {
-    .inv-display {
+
+    .inv-display,
+    .up-display {
         display: grid;
         grid-template-columns: repeat(5, minmax(280px, 1fr));
         gap: 1.25rem;
