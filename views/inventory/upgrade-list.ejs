@@ -4,21 +4,23 @@
     </h1>
 
     <% if (!Array.isArray(list) || list.length===0) { %>
-        <p class="notice">No <%= title %> found for this category.</p>
+        <p class="notice-not-available">No <%= title %> found for this category.</p>
         <% } else { %>
-            <ul class="inv-display">
+            <ul class="up-display">
                 <% list.forEach(u=> { %>
-                    <li class="inv-card">
+                    <li class="up-card">
                         <a href="/upgrade/item/<%= u.up_inv_id %>">
                             <% const img=u.up_inv_image || u.up_inv_thumbnail; %>
                                 <% if (img) { %>
                                     <img src="<%= img %>" alt="<%= u.up_inv_item %>">
                                     <% } %>
-                                        <div class="inv-name">
-                                            <%= u.up_inv_item %>
+                                        <div class="namePrice">
+                                            <h2>
+                                                <%= u.up_inv_item %>
+                                            </h2>
+                                            <span>$<%= Number(u.up_inv_price).toLocaleString() %></span>
                                         </div>
-                                        <div class="inv-price">$<%= Number(u.up_inv_price).toLocaleString() %>
-                                        </div>
+
                         </a>
                     </li>
                     <% }) %>

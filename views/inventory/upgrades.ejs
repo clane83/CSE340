@@ -10,20 +10,21 @@
                 <% if (img) { %>
                     <img class="upgrade-img" src="<%= img %>" alt="Image of <%= item.up_inv_item %>">
                     <% } %>
-                        <h2 class="upgrade-title">
-                            <%= item.up_inv_item %>
+                        <h2>
+                            <%= title %> Details
                         </h2>
-                        <p class="upgrade-type"><strong>Type:</strong>
-                            <%= item.up_type %>
-                        </p>
-                        <p class="upgrade-price"><strong>Price:</strong> $<%= Number(item.up_inv_price).toLocaleString()
-                                %>
-                        </p>
-                        <% if (item.up_inv_description) { %>
-                            <p class="upgrade-desc">
-                                <%= item.up_inv_description %>
-                            </p>
-                            <% } %>
-                                <p><a href="javascript:history.back()">← Back</a></p>
+                        <ul class="specs">
+                            <li><strong>Type:</strong>
+                                <%= item.up_type %>
+                            </li>
+                            <li><strong>Price:</strong>
+                                $<%= Number(item.up_inv_price).toLocaleString() %>
+                            </li>
+                        </ul>
+                        <div class="desc">
+                            <strong>Description: </strong>
+                            <%= item.up_inv_description %>
+                        </div>
+                        <p><a href="javascript:history.back()">← Back</a></p>
         </article>
         <% } %>
